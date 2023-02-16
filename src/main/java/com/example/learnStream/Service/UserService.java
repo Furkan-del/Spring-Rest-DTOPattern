@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,6 +53,17 @@ public class UserService {
 
         userRepository.deleteById(id);
         return "deleted user id:"+id;
+
+    }
+
+    public UsersDto updateById(Long id, UsersDto usersDto) {
+        Optional<Users>resultUser=userRepository.findById(id);
+         if(resultUser.isPresent()){
+             resultUser.get().setName(usersDto.getName());
+             resultUser.get().setLastname(usersDto.getLastname());
+            return modelMapper.map(userRepository.save(resultUser.get()), UsersDto.class);
+         }
+         return null;
 
     }
 }
